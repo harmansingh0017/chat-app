@@ -4,24 +4,20 @@ pipeline {
 
     environment {
         registry = "harmans497"
-        registryCredential = 'dockerhub' // You should define this in Jenkins credentials
+        registryCredential = 'dockerhub'
     }
 
     stages {
 
-        stage('BUILD') {
-            steps {
-                sh 'npm install'
-                sh 'npm run build'
-            }
-        }
-
-        stage('Build App Image') {
+        stage('Build Client') {
             steps {
                 dir('client') {
                     script {
+                        sh 'npm install'
+                        sh 'npm run build'
+                        sh 'docker build -t ${registry}/chat-app-client:${BUILD_NUMBER} -f Dockerfile .'
                         docker.withRegistry('', registryCredential) {
-                            dockerImageClient = docker.build("${registry}/chat-app-client:V${BUILD_NUMBER}")
+                            dockerImageClient = docker.image("${registry}/chat-app-client:${BUILD_NUMBER}")
                             dockerImageClient.push()
                         }
                     }
@@ -29,13 +25,22 @@ pipeline {
             }
         }
 
-        stage('Kubernetes Deploy') {
-            agent { label 'KOPS' }
+        stage('Build Server') {
             steps {
-                dir('helm/react-app') {
-                    sh "helm upgrade --install --force react-app . --set appimage=${registry}/chat-app-client:V${BUILD_NUMBER} --namespace prod"
+                dir('server') {
+                    script {
+                        sh 'npm install'
+                        sh 'docker build -t ${registry}/chat-app-server:${BUILD_NUMBER} -f Dockerfile .'
+                        docker.withRegistry('', registryCredential) {
+                            dockerImageServer = docker.image("${registry}/chat-app-server:${BUILD_NUMBER}")
+                            dockerImageServer.push()
+                        }
+                    }
                 }
             }
         }
+
+        // ... Rest of your stages
+
     }
 }
