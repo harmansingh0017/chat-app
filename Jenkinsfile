@@ -13,6 +13,9 @@ pipeline {
             steps {
                 dir('client') {
                     script {
+                        sh 'npm install'
+                        sh 'npm run build'
+                        sh 'docker build -t ${registry}/chat-app-client:${BUILD_NUMBER} -f Dockerfile .'
                         docker.withRegistry('', registryCredential) {
                             dockerImageClient = docker.image("${registry}/chat-app-client:${BUILD_NUMBER}")
                             dockerImageClient.push()
@@ -26,6 +29,8 @@ pipeline {
             steps {
                 dir('server') {
                     script {
+                        sh 'npm install'
+                        sh 'docker build -t ${registry}/chat-app-server:${BUILD_NUMBER} -f Dockerfile .'
                         docker.withRegistry('', registryCredential) {
                             dockerImageServer = docker.image("${registry}/chat-app-server:${BUILD_NUMBER}")
                             dockerImageServer.push()
