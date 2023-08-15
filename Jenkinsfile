@@ -23,33 +23,15 @@ pipeline {
 
 
         stage('Build App Image') {
-          steps {
-            script {
-              dockerImageClient = docker.build("${registry}/chat-app-client:V${BUILD_NUMBER}", './client')
-              dockerImageServer = docker.build("${registry}/chat-app-server:V${BUILD_NUMBER}", './server')
+		dir('client'){
+                     steps {
+                       script {
+                                dockerImageClient = docker.build("${registry}/chat-app-client:V${BUILD_NUMBER}")
             }
           }
         }
-
-        stage('Upload Image'){
-          steps{
-            script {
-              docker.withRegistry('', registryCredential) {
-                dockerImageClient.push("V$BUILD_NUMBER")
-                dockerImageClient.push('latest')
-                dockerImageServer.push("V$BUILD_NUMBER")
-                dockerImageServer.push('latest')
-              }
-            }
-          }
-        }
-
-         stage('Remove Unused docker image') {
-          steps{
-            sh "docker rmi $registry/chat-app-client:V$BUILD_NUMBER"
-            sh "docker rmi $registry/chat-app-server:V$BUILD_NUMBER"
-          }
-        }
+     }
+       
 
         stage('Kubernetes Deploy') {
           agent {label 'KOPS'}
