@@ -40,6 +40,17 @@ pipeline {
             }
         }
 
+        stage('Remove Unused Docker Image') {
+            steps {
+                script {
+                    def imageNameclient = "${registry}/chat-app-client:V${BUILD_NUMBER}"
+                    def imageNameserver = "${registry}/chat-app-server:V${BUILD_NUMBER}"
+                    sh "docker rmi $imageNameclient"
+                    sh "docker rmi $imageNameserver"
+                }
+            }
+        }
+
         // ... Rest of your stages
 
     }
