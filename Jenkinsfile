@@ -1,45 +1,41 @@
 pipeline {
 
     agent any
-/*
-	tools {
-        maven "maven3"
-    }
-*/
+
     environment {
         registry = "harmans497"
-        registryCredential = 'dockerhub'
+        registryCredential = 'dockerhub' // You should define this in Jenkins credentials
     }
 
-    stages{
+    stages {
 
-        stage('BUILD'){
+        stage('BUILD') {
             steps {
                 sh 'npm install'
                 sh 'npm run build'
             }
-            
         }
-
 
         stage('Build App Image') {
-		steps{
-                      dir('client'){
-                       script {
-                                dockerImageClient = docker.build("${registry}/chat-app-client:V${BUILD_NUMBER}")
+            steps {
+                dir('client') {
+                    script {
+                        docker.withRegistry('', registryCredential) {
+                            dockerImageClient = docker.build("${registry}/chat-app-client:V${BUILD_NUMBER}")
+                            dockerImageClient.push()
+                        }
+                    }
+                }
             }
-          }
         }
-     }
-       
 
         stage('Kubernetes Deploy') {
-          agent {label 'KOPS'}
+            agent { label 'KOPS' }
             steps {
-              sh "helm upgrade --install --force react-app helm/react-app --set appimage=${registry}:V${BUILD_NUMBER} --namespace prod"
+                dir('helm/react-app') {
+                    sh "helm upgrade --install --force react-app . --set appimage=${registry}/chat-app-client:V${BUILD_NUMBER} --namespace prod"
+                }
             }
         }
     }
-
-
 }
