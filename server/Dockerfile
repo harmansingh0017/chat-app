@@ -1,21 +1,21 @@
-# Use an official Node.js runtime as the base image
-FROM node:14
+# Use the official Node.js image as the base image
+FROM node:12
 
-# Set the working directory inside the container
-WORKDIR /app/server
+# Set the working directory within the container
+WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy package.json and package-lock.json to the container
 COPY package*.json ./
 
-# Install server-side dependencies
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the server application code
+# Copy the client code to the container
 COPY . .
 
-# Expose the port on which your server listens
 EXPOSE 5000
 
-# Start the server
-CMD ["node", "server.js"]
+
+# Command to start the app
+CMD [ "npm", "start" ]
 

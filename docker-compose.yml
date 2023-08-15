@@ -1,0 +1,20 @@
+version: '3'
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    tty: true
+    stdin_open: true      
+              
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    stdin_open: true 
+    ports:
+      - "3000:3000"
+
