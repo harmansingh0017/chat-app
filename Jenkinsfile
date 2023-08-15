@@ -14,10 +14,10 @@ pipeline {
                 dir('client') {
                     script {
                         sh 'npm install'
-                        sh 'npm run build'
-                        dockerImage = docker.build(registry + "/chat-app-client:V" + BUILD_NUMBER)
+                        sh 'npm run build' 
+                        dockerImage = docker.build registry + "/chat-app-client:V$BUILD_NUMBER"
                         docker.withRegistry('', registryCredential) {
-                            dockerImageClient = docker.image("${registry}/chat-app-client:${BUILD_NUMBER}")
+                            dockerImageClient = docker.image("${registry}/chat-app-client:V${BUILD_NUMBER}")
                             dockerImageClient.push()
                         }
                     }
@@ -30,9 +30,9 @@ pipeline {
                 dir('server') {
                     script {
                         sh 'npm install'
-                        dockerImage = docker.build(registry + "/chat-app-server:V" + BUILD_NUMBER)
+                        dockerImage = docker.build registry + "/chat-app-server:V$BUILD_NUMBER"
                         docker.withRegistry('', registryCredential) {
-                            dockerImageServer = docker.image("${registry}/chat-app-server:${BUILD_NUMBER}")
+                            dockerImageServer = docker.image("${registry}/chat-app-server:V${BUILD_NUMBER}")
                             dockerImageServer.push()
                         }
                     }
