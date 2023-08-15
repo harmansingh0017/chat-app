@@ -23,8 +23,8 @@ pipeline {
 
 
         stage('Build App Image') {
-		dir('client'){
-                     steps {
+		steps{
+                      dir('client'){
                        script {
                                 dockerImageClient = docker.build("${registry}/chat-app-client:V${BUILD_NUMBER}")
             }
