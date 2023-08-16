@@ -2,23 +2,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chat-client
+  name: c-c
   labels: 
-    app: chat-client
+    app: c-c
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: chat-client
+      app: c-c
   template:
     metadata:
       labels:
-        app: chat-client
+        app: c-
     spec:
       containers:
-      - name: react-app
+      - name: c-s-app
         image: {{ .Values.image.client.repository }}:{{ .Values.image.client.tag }}
         ports:
-        - name: chat-client-port
+        - name: c-c-port
           containerPort: 3000
       
