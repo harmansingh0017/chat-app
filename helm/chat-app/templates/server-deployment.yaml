@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: c-s-app
-        image: {{ .Values.image.server.repository }}:{{ .Values.image.server.tag }}
+        image: {{ .Values.image.server.repository }}
         ports:
         - name: c-s-port
           containerPort: 5000
