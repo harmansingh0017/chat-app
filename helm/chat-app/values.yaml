@@ -7,10 +7,10 @@ replicaCount: 1
 image:
   client:
     repository: "harmans497/chat-app-client"
-    tag: "latest"
+    tag: ""
   server:
     repository: "harmans497/chat-app-server"
-    tag: "latest"
+    tag: ""
 
 
 imagePullSecrets: []
