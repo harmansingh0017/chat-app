@@ -17,7 +17,7 @@ pipeline {
                         sh 'npm run build' 
                         dockerImageClient = docker.build registry + "/chat-app-client:V$BUILD_NUMBER"
                         docker.withRegistry('', registryCredential) {
-                            dockerImageClient.push("")
+                            dockerImageClient.push(""V$BUILD_NUMBER"")
                             dockerImageClient.push('latest')
                         }
                     }
@@ -32,7 +32,7 @@ pipeline {
                         sh 'npm install'
                         dockerImageServer = docker.build registry + "/chat-app-server:V$BUILD_NUMBER"
                         docker.withRegistry('', registryCredential) {
-                            dockerImageServer.push("")
+                            dockerImageServer.push(""V$BUILD_NUMBER"")
                             dockerImageServer.push('latest')
                         }
                     }
