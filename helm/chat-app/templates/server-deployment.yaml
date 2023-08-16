@@ -16,7 +16,7 @@ spec:
         app: c-s
     spec:
       containers:
-      - name: react-app
+      - name: c-s-app
         image: {{ .Values.image.server.repository }}:{{ .Values.image.server.tag }}
         ports:
         - name: c-s-port
