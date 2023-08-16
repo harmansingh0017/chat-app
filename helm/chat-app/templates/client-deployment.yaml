@@ -13,10 +13,10 @@ spec:
   template:
     metadata:
       labels:
-        app: c-
+        app: c-c
     spec:
       containers:
-      - name: c-s-app
+      - name: c-c-app
         image: {{ .Values.image.client.repository }}:{{ .Values.image.client.tag }}
         ports:
         - name: c-c-port
