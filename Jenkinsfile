@@ -54,7 +54,8 @@ pipeline {
         stage('Kubernetes Deploy') {
           agent {label 'KOPS'}
             steps {
-               sh "helm upgrade --install --force chat-app helm/chat-app --set image.client.repository={registry}/chat-app-client:V${BUILD_NUMBER},image.server.repository={registry}/chat-app-server:V${BUILD_NUMBER} --namespace prod"
+               sh "helm upgrade --install --force chat-app helm/chat-app --set image.client.repository=${registry}/chat-app-client:V${BUILD_NUMBER},image.server.repository=${registry}/chat-app-server:V${BUILD_NUMBER} --namespace prod"
+                
             }
         }
 
